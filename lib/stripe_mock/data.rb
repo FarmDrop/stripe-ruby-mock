@@ -1088,5 +1088,50 @@ module StripeMock
         secret: "ek_test_default"
       }
     end
+
+    def self.mock_payment_method(**params)
+      {
+        id: params[:id],
+        object: "payment_method",
+        billing_details: {
+          address: {
+            city: params.dig(:billing_details, :address, :city),
+            country: params.dig(:billing_details, :address, :country),
+            line1: params.dig(:billing_details, :address, :line1),
+            line2: params.dig(:billing_details, :address, :line2),
+            postal_code: params.dig(:billing_details, :address, :postal_code),
+            state: params.dig(:billing_details, :address, :state)
+          },
+          email: params.dig(:billing_details, :email),
+          name: params.dig(:billing_details, :name),
+          phone: params.dig(:billing_details, :phone)
+        },
+        card: {
+          object: "card",
+          brand: "visa",
+          checks: {
+            address_line1_check: nil,
+            address_postal_code_check: nil,
+            cvc_check: nil
+          },
+          country: "US",
+          exp_month: params.dig(:card, :exp_month),
+          exp_year: params.dig(:card, :exp_year),
+          fingerprint: "Xt5EWLLDS7FJjR1c",
+          funding: "credit",
+          generated_from: nil,
+          last4: params.dig(:card, :number)&.slice(-4..-1),
+          three_d_secure_usage: {
+            supported: true
+          },
+          wallet: nil
+        },
+        created: Time.now.to_i,
+        customer: nil,
+        livemode: false,
+        metadata: {},
+        type: "card"
+      }
+    end
   end
 end
